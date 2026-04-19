@@ -34,3 +34,9 @@ backend/pip-wheel-metadata/
 *.log
 tmp/
 temp/
+
+# Runtime outputs
+backend/runs_ui/
+backend/BenchMark/Output/
+backend/BenchMark/result.json
+backend/BenchMark/score.json
