@@ -1,0 +1,15 @@
+{
+  "run_id": "20260419_201820_475999",
+  "status": "failed",
+  "video_path": "/Users/yaoyutong/Documents/FYP/Test/Video_Test_1/test_video1.mov",
+  "process_fps": 12.0,
+  "original_fps": 57.92387543252595,
+  "created_at": "2026-04-19T12:18:20.822366+00:00",
+  "completed_at": "2026-04-19T12:18:23.323454+00:00",
+  "error": "Pipeline exited with code 1",
+  "out_dir": "/Users/yaoyutong/Documents/FYP/AutoScout/backend/runs_ui/20260419_201820_475999/output",
+  "pid": 7466,
+  "processed_sampled_frames": 1,
+  "expected_sampled_frames": 58,
+  "progress": 0.017241379310344827
+}

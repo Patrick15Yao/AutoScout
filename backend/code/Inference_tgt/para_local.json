@@ -1,8 +1,8 @@
 {
-    "players_weights": "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/players_training_2_cont2",
-    "pocket_weights": "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/LOS_Training_1_",
-    "yardline_weights": "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/yardline_Training_3_",
-    "harshmark_weights": "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/HarshMark_Training_1_",
+    "players_weights": "/Users/yaoyutong/Documents/FYP/AutoScout/backend/runs/players_training_2_cont2",
+    "pocket_weights": "/Users/yaoyutong/Documents/FYP/AutoScout/backend/runs/LOS_Training_1_",
+    "yardline_weights": "/Users/yaoyutong/Documents/FYP/AutoScout/backend/runs/yardline_Training_3_",
+    "harshmark_weights": "/Users/yaoyutong/Documents/FYP/AutoScout/backend/runs/HarshMark_Training_1_",
     "conf_players": 0.25,
     "conf_pocket": 0.25,
     "conf_yardline": 0.25,
