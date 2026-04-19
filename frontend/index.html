@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AutoScout Frontend Mock</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar">
+        <div class="brand-block">
+          <h1>AutoScout</h1>
+          <p>Film Analysis Workspace</p>
+        </div>
+
+        <div class="import-run">
+          <label class="file-chip" for="filmInput">
+            <input id="filmInput" type="file" accept="video/*" />
+            <span>Import Film</span>
+          </label>
+          <label class="video-path-wrap" for="videoPathInput">
+            <span>Video Path</span>
+            <input
+              id="videoPathInput"
+              type="text"
+              value="/Users/yaoyutong/Documents/FYP/Test/Video_Test_1/test_video1.mov"
+            />
+          </label>
+          <label class="fps-input-wrap" for="processFpsInput">
+            <span>Process FPS</span>
+            <input id="processFpsInput" type="number" min="0.1" step="0.1" value="12" />
+          </label>
+          <button id="runAnalysisBtn" class="run-btn">Run Analysis</button>
+          <span id="runStatusChip" class="status-chip status-idle">Idle</span>
+        </div>
+
+        <div class="quick-stats">
+          <article>
+            <strong>Original FPS</strong>
+            <span id="originalFpsStat">30</span>
+          </article>
+          <article>
+            <strong>Frames</strong>
+            <span id="framesStat">220</span>
+          </article>
+          <article>
+            <strong>Avg Selected</strong>
+            <span id="avgSelectedStat">21.8</span>
+          </article>
+        </div>
+      </header>
+
+      <main class="workspace-grid">
+        <section class="visual-pane">
+          <div class="panel-head">
+            <h2>Main Viewer</h2>
+            <div class="sync-pill">
+              <span class="sync-dot"></span>
+              <span>Synchronized Views</span>
+            </div>
+          </div>
+
+          <div class="overlay-toggles">
+            <label><input id="togglePlayerBox" type="checkbox" checked /> Player Box</label>
+            <label><input id="togglePocketBox" type="checkbox" checked /> Pocket Box</label>
+            <label><input id="toggleYardline" type="checkbox" checked /> Yardline</label>
+            <label><input id="toggleHashmark" type="checkbox" checked /> Hashmark</label>
+          </div>
+
+          <div class="dual-view-grid">
+            <div class="viewer-frame">
+              <div class="mock-canvas image-canvas active">
+                <div class="viewer-img-wrap" id="originalViewport">
+                  <div class="viewer-controls">
+                    <button type="button" class="ctrl-btn" data-target="original" data-action="zoom-in">+</button>
+                    <button type="button" class="ctrl-btn" data-target="original" data-action="zoom-out">-</button>
+                    <button type="button" class="ctrl-btn" data-target="original" data-action="reset">Reset</button>
+                  </div>
+                  <canvas id="originalOverlayCanvas" class="overlay-canvas"></canvas>
+                  <img
+                    id="originalSampleImage"
+                    class="viewer-img pannable-image"
+                    data-viewer="original"
+                    alt="Original frame sample"
+                  />
+                </div>
+                <div class="canvas-caption">
+                  <h3>Original Video Sample</h3>
+                  <p id="originalSampleHint">Trying to load sample frame...</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="viewer-frame">
+              <div class="mock-canvas image-canvas active">
+                <div class="viewer-img-wrap" id="fieldViewport">
+                  <div class="viewer-controls">
+                    <button type="button" class="ctrl-btn" data-target="field" data-action="zoom-in">+</button>
+                    <button type="button" class="ctrl-btn" data-target="field" data-action="zoom-out">-</button>
+                    <button type="button" class="ctrl-btn" data-target="field" data-action="reset">Reset</button>
+                  </div>
+                  <img
+                    id="fieldSampleImage"
+                    class="viewer-img pannable-image"
+                    data-viewer="field"
+                    alt="2D field sample"
+                  />
+                </div>
+                <div class="canvas-caption">
+                  <h3>2D Field View Sample</h3>
+                  <p id="fieldSampleHint">Trying to load sample field frame...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="right-pane">
+          <section class="card">
+            <div class="insights-head">
+              <h3>Presnap Insights</h3>
+              <div class="insight-mode">
+                <button class="insight-btn active" data-insight-mode="numbers">Numbers</button>
+                <button class="insight-btn" data-insight-mode="graph">Formation Graph</button>
+              </div>
+            </div>
+
+            <div id="insightNumbers" class="insight-view active">
+              <div class="mini-grid">
+                <div><span>Off WR</span><strong id="countOffWr">3</strong></div>
+                <div><span>Off Lineman</span><strong id="countOffLineman">6</strong></div>
+                <div><span>Off Backs</span><strong id="countOffBacks">2</strong></div>
+                <div><span>Def DL</span><strong id="countDefDl">4</strong></div>
+                <div><span>Def Second</span><strong id="countDefSecond">4</strong></div>
+                <div><span>Def Deep</span><strong id="countDefDeep">3</strong></div>
+              </div>
+            </div>
+
+            <div id="insightGraph" class="insight-view">
+              <div class="formation-mini-wrap">
+                <img id="formationImage" class="formation-mini-img" alt="Presnap formation" />
+              </div>
+              <p id="formationHint" class="formation-mini-hint">Formation graph for current run.</p>
+            </div>
+          </section>
+
+          <section class="card notes-card">
+            <div class="notes-head">
+              <h3>Notes</h3>
+              <div class="note-mode">
+                <button class="mode-btn active" data-note-mode="overall">Overall</button>
+                <button class="mode-btn" data-note-mode="frame">Frame</button>
+              </div>
+            </div>
+            <div id="overallCommentBubble" class="comment-bubble comment-bubble-overall">
+              Overall: no comment yet.
+            </div>
+            <div id="currentCommentBubble" class="comment-bubble comment-bubble-current">
+              Current frame: no comment yet.
+            </div>
+            <div class="note-entry-row">
+              <textarea id="noteInput" placeholder="Write your note here..."></textarea>
+              <button id="saveNoteBtn" class="note-btn">Save Note</button>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="timeline-wrap">
+        <div class="timeline-controls">
+          <button id="playPauseBtn" class="play-btn" type="button">Play</button>
+          <label class="speed-wrap" for="playbackSpeedSelect">
+            <span>Speed</span>
+            <select id="playbackSpeedSelect">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </label>
+          <span id="timelineClock" class="timeline-clock">00:00 / 00:00</span>
+        </div>
+        <div class="timeline-bar">
+          <div id="globalProgress" class="progress" style="width: 0%"></div>
+          <div id="noteMarkers"></div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

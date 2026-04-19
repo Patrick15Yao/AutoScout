@@ -1,0 +1,12 @@
+{
+  "players_weights": "/userhome/cs/u3597462/Autoscout/AutoScout_Server/runs/players_training_2_cont2",
+  "pocket_weights": "/userhome/cs/u3597462/Autoscout/AutoScout_Server/runs/LOS_Training_1_",
+  "yardline_weights": "/userhome/cs/u3597462/Autoscout/AutoScout_Server/runs/yardline_Training_3_",
+  "harshmark_weights": "/userhome/cs/u3597462/Autoscout/AutoScout_Server/runs/HarshMark_Training_1_",
+  "conf_players": 0.25,
+  "conf_pocket": 0.25,
+  "conf_yardline": 0.25,
+  "conf_harshmark": 0.25,
+  "device": "0"
+}
+

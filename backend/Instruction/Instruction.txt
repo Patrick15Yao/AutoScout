@@ -1,0 +1,12 @@
+python "/Users/yaoyutong/Documents/FYP/AutoScout_Server/code/Inference_tgt/inference_all.py" \
+  --image "/Users/yaoyutong/Documents/FYP/AutoScout_Server/EngData/Test_2(Color)/A1_0031.jpg" \
+  --players-weights "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/players_training_2_cont2/weights/best.pt" \
+  --pocket-weights "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/LOS_Training_1_/weights/best.pt" \
+  --yardline-weights "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/yardline_Training_3_/weights/best.pt" \
+  --harshmark-weights "/Users/yaoyutong/Documents/FYP/AutoScout_Server/runs/HarshMark_Training_1_/weights/best.pt" \
+  --out-dir "/Users/yaoyutong/Documents/FYP/AutoScout_Server/EngData/Test_2(Color)" \
+  --out-name "A1_0031" \
+  --visualize
+
+
+  

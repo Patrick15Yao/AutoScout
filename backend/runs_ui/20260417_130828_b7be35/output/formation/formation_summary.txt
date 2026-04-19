@@ -1,0 +1,43 @@
+frame=frame_000000
+offense_team=0
+defense_team=1
+x_los=12.6237
+y_mid=22.1663
+off_lineman_backs_threshold_norm=0.5114
+
+[counts]
+off_wr=3
+off_lineman=6
+off_backs=2
+def_dl=4
+def_second=4
+def_deep=3
+off_in_box=8
+off_out_box=3
+def_in_box=5
+def_out_box=6
+
+[players]
+player_index team_id side level box_tag track_id team_slot x_field y_field conf
+0 0 off off_wr out_box -1 1 11.0338 43.0081 0.8940
+1 1 def def_second out_box -1 1 14.3401 43.3569 0.8882
+2 1 def def_deep out_box -1 2 18.0105 33.4496 0.8871
+3 1 def def_dl in_box -1 3 13.4048 18.3518 0.8823
+4 0 off off_wr out_box -1 2 10.4549 34.2137 0.8807
+5 1 def def_deep out_box -1 4 25.0328 20.3149 0.8773
+6 0 off off_lineman in_box -1 3 11.3873 29.2052 0.8772
+7 0 off off_wr out_box -1 4 10.7541 9.1774 0.8759
+8 1 def def_second out_box -1 5 17.3387 22.7954 0.8738
+9 1 def def_deep out_box -1 6 21.6499 21.1575 0.8665
+10 0 off off_lineman in_box -1 5 10.9614 19.6972 0.8530
+11 1 def def_dl in_box -1 7 13.6596 26.5718 0.8389
+12 1 def def_second in_box -1 8 15.2437 18.5263 0.8383
+13 1 def def_second out_box -1 9 14.1774 8.9019 0.8380
+14 0 off off_lineman in_box -1 6 11.1772 25.1276 0.8294
+15 1 def def_dl in_box -1 10 13.2455 21.7670 0.8154
+16 0 off off_backs in_box -1 7 7.3703 21.7832 0.7983
+17 0 off off_lineman in_box -1 8 11.1601 21.4207 0.7949
+18 0 off off_lineman in_box -1 9 11.2521 23.6658 0.7935
+19 0 off off_backs in_box -1 10 7.2305 20.4099 0.7591
+20 1 def def_dl in_box -1 11 13.2549 25.1540 0.7205
+21 0 off off_lineman in_box -1 11 12.0020 22.5494 0.6374
