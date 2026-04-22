@@ -2,6 +2,12 @@
 
 Setup and run guide.
 
+## Project Introduction Website
+
+For detailed project background, methodology, and results, see:
+
+- [AutoScout: AI-Power Football Film Analysis System](https://wp2025.cs.hku.hk/fyp25035/)
+
 ## 1) Create Conda Environment
 
 From project root:
