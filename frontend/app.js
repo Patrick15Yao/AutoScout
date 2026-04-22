@@ -59,6 +59,7 @@ const appState = {
   isPlaying: false,
   playbackSpeed: 1,
   overlayByFrame: {},
+  isUploadingFilm: false,
 };
 
 function apiUrl(path) {
@@ -79,9 +80,27 @@ function currentFrame() {
   return appState.frames[Math.max(0, Math.min(appState.currentFrameIndex, appState.frames.length - 1))];
 }
 
-function setStatus(statusText) {
+function setStatus(statusText, tone = "idle") {
   if (!runStatusChip) return;
   runStatusChip.textContent = statusText;
+  runStatusChip.classList.remove("status-idle", "status-running", "status-complete");
+  // Inline style fallback avoids stale CSS cache issues.
+  if (tone === "running") {
+    runStatusChip.style.background = "#cf2b2b";
+    runStatusChip.style.borderColor = "#e15a5a";
+    runStatusChip.style.color = "#ffffff";
+  } else if (tone === "complete") {
+    runStatusChip.style.background = "#2c9a55";
+    runStatusChip.style.borderColor = "#49ba73";
+    runStatusChip.style.color = "#ffffff";
+  } else {
+    runStatusChip.style.background = "#ffffff";
+    runStatusChip.style.borderColor = "#d8dfef";
+    runStatusChip.style.color = "#18213b";
+  }
+  if (tone === "running") runStatusChip.classList.add("status-running");
+  else if (tone === "complete") runStatusChip.classList.add("status-complete");
+  else runStatusChip.classList.add("status-idle");
 }
 
 function setCountText(el, value) {
@@ -459,7 +478,9 @@ async function refreshRunStatus(runId) {
   const status = await res.json();
   appState.runStatus = status;
   const progressPct = Math.round((status.progress || 0) * 100);
-  setStatus(`${status.status} ${progressPct}%`);
+  const statusText = String(status.status || "").toLowerCase();
+  const tone = statusText === "completed" ? "complete" : (statusText === "running" || statusText === "queued" ? "running" : "idle");
+  setStatus(`${status.status} ${progressPct}%`, tone);
   await loadRunData(runId);
   if (!["queued", "running"].includes(status.status) && appState.pollTimer) {
     clearInterval(appState.pollTimer);
@@ -469,17 +490,21 @@ async function refreshRunStatus(runId) {
 
 async function startRun() {
   if (!videoPathInput || !processFpsInput) return;
+  if (appState.isUploadingFilm) {
+    setStatus("Please wait for film upload to finish", "running");
+    return;
+  }
   const videoPath = videoPathInput.value.trim();
   const processFps = Number.parseFloat(processFpsInput.value);
   if (!videoPath) {
-    setStatus("Video path required");
+    setStatus("Video path required", "idle");
     return;
   }
   if (!Number.isFinite(processFps) || processFps <= 0) {
-    setStatus("Invalid FPS");
+    setStatus("Invalid FPS", "idle");
     return;
   }
-  setStatus("Submitting...");
+  setStatus("Submitting...", "running");
   const res = await fetch(apiUrl("/api/runs"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -487,17 +512,51 @@ async function startRun() {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    setStatus(err.detail || "Run start failed");
+    setStatus(err.detail || "Run start failed", "idle");
     return;
   }
   const run = await res.json();
   appState.currentRunId = run.run_id;
-  setStatus(`Queued @ ${processFps} FPS`);
+  setStatus(`Queued @ ${processFps} FPS`, "running");
   if (appState.pollTimer) clearInterval(appState.pollTimer);
   appState.pollTimer = setInterval(() => {
     if (appState.currentRunId) refreshRunStatus(appState.currentRunId);
   }, 2500);
   await refreshRunStatus(appState.currentRunId);
+}
+
+async function importFilmToBackend() {
+  if (!filmInput || !videoPathInput) return;
+  const file = filmInput.files?.[0];
+  if (!file) return;
+  appState.isUploadingFilm = true;
+  if (runAnalysisBtn) runAnalysisBtn.disabled = true;
+  setStatus(`Uploading ${file.name}...`, "running");
+
+  const body = new FormData();
+  body.append("file", file, file.name);
+
+  try {
+    const res = await fetch(apiUrl("/api/uploads/video"), {
+      method: "POST",
+      body,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Upload failed");
+    }
+    const payload = await res.json();
+    const resolvedPath = String(payload.video_path || "").trim();
+    if (!resolvedPath) throw new Error("Upload succeeded but no path returned");
+    videoPathInput.value = resolvedPath;
+    setStatus(`Imported: ${file.name}`, "idle");
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Upload failed";
+    setStatus(msg, "idle");
+  } finally {
+    appState.isUploadingFilm = false;
+    if (runAnalysisBtn) runAnalysisBtn.disabled = false;
+  }
 }
 
 async function saveNote() {
@@ -634,11 +693,7 @@ if (playbackSpeedSelect) {
 }
 if (filmInput && videoPathInput) {
   filmInput.addEventListener("change", () => {
-    const name = filmInput.files?.[0]?.name;
-    if (name) {
-      setStatus("Picked file name only; paste full absolute path for backend run.");
-      videoPathInput.focus();
-    }
+    importFilmToBackend();
   });
 }
 

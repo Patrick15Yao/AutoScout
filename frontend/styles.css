@@ -139,9 +139,21 @@ body {
 }
 
 .status-idle {
-  color: #dce4ff;
-  background: #27365e;
-  border-color: #40558f;
+  color: #18213b;
+  background: #ffffff;
+  border-color: #d8dfef;
+}
+
+.status-running {
+  color: #ffffff;
+  background: #cf2b2b;
+  border-color: #e15a5a;
+}
+
+.status-complete {
+  color: #ffffff;
+  background: #2c9a55;
+  border-color: #49ba73;
 }
 
 .quick-stats {

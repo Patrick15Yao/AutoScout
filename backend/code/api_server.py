@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import cv2
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -23,6 +23,8 @@ SERVER_ROOT = Path(__file__).resolve().parent.parent
 PIPELINE_SCRIPT = SERVER_ROOT / "code" / "run_video_pipeline.py"
 RUNS_ROOT = SERVER_ROOT / "runs_ui"
 RUNS_ROOT.mkdir(parents=True, exist_ok=True)
+UPLOADS_ROOT = RUNS_ROOT / "uploads"
+UPLOADS_ROOT.mkdir(parents=True, exist_ok=True)
 
 
 def utc_now_iso() -> str:
@@ -289,6 +291,41 @@ def _worker(run: RunState) -> None:
 @app.get("/api/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.post("/api/uploads/video")
+async def upload_video(file: UploadFile = File(...)) -> dict[str, Any]:
+    if file.filename is None or not str(file.filename).strip():
+        raise HTTPException(status_code=400, detail="Missing upload filename.")
+    safe_name = Path(file.filename).name
+    suffix = Path(safe_name).suffix
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out_name = f"{stamp}_{uuid.uuid4().hex[:6]}{suffix}"
+    out_path = (UPLOADS_ROOT / out_name).resolve()
+
+    total = 0
+    try:
+        with out_path.open("wb") as f:
+            while True:
+                chunk = await file.read(1024 * 1024)
+                if not chunk:
+                    break
+                total += len(chunk)
+                f.write(chunk)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to save upload: {exc}") from exc
+    finally:
+        await file.close()
+
+    if total <= 0 or not out_path.exists():
+        out_path.unlink(missing_ok=True)
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
+    return {
+        "video_path": str(out_path),
+        "filename": safe_name,
+        "size_bytes": total,
+    }
 
 
 @app.post("/api/runs")
